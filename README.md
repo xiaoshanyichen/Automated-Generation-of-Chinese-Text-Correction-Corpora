@@ -1,4 +1,8 @@
-# Automated-Generation-of-Chinese-Text-Correction-Corpora
+<!-- 
+  Single Markdown file that has two sections (English / Chinese) and simple links to switch.
+  By default, English is shown; clicking on "中文" hides English and reveals Chinese.
+  The JavaScript at the end may not work in all Markdown renderers that disallow scripts.
+-->
 
 [English](javascript:showEnglish()) | [中文](javascript:showChinese())
 
@@ -57,7 +61,7 @@ This project aims to automatically construct Chinese text correction corpora fro
 - **自动匹配**：对比正确与错误文本，产出纠错对。  
 - **形近字分析**：统计并输出常见易混淆字映射，助力后续研究。
 
-- **模型训练与测试**  
+**模型训练与测试**  
 - 你可以使用 `(ocr_sent, ori_sent)` 训练一个序列到序列的中文纠错模型（如 T5）。
 - 通过预先准备的测试集来验证模型对于 OCR 错别字的纠正效果。
 
