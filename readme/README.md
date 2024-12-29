@@ -11,7 +11,7 @@ Sometimes, I want to edit some old documents that I used wrote and keep a new ve
 
 1. **PDF Preprocessing**  
    The first step is the PDF preprocessing step, which involves taking a text-based PDF file and extracting the text from each page. I used PyMuPDF (imported as fitz in Python) to obtain the textual content. The results are stored in a JSON file, mapping page indices to text content.  
-   For example, check out the cover page and contents page of ***deguo_tongshi***:![Alt Text](/../assets/deguo_tongshi_cover.png) ![Alt Text](/../assets/deguo_tongshi_contents.png)
+   For example, check out the cover page and contents page of ***deguo_tongshi***:![Alt Text](/assets/deguo_tongshi_cover.png) ![Alt Text](/assets/deguo_tongshi_contents.png)
    The resulted text is:
    ```json
    {
