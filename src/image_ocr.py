@@ -33,7 +33,7 @@ def get_pdf_file_ocr_result(pdf_file_dir_path: str) -> dict[int, str]:
 
 
 if __name__ == '__main__':
-    pdf_file_name = "guoyun1909"
+    pdf_file_name = "deguo_tongshi"
     pdf_dir_path = os.path.join(PROJECT_DIR, f"output/{pdf_file_name}")
 
     ocr_result = get_pdf_file_ocr_result(pdf_dir_path)

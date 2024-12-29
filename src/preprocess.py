@@ -55,7 +55,7 @@ def convert_pdf_2_img(pdf_file: str) -> list[str]:
 
 if __name__ == '__main__':
     s_time = time.time()
-    file_name = "weite.pdf"
+    file_name = "deguo_tongshi.pdf"
     file_path = os.path.join(PROJECT_DIR, f"docs/{file_name}")
 
     # PDF -> PNG

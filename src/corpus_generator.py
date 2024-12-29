@@ -70,7 +70,7 @@ def get_corpus(original_text: str, ocr_text: str) -> list[dict]:
 
 
 if __name__ == '__main__':
-    pdf_file_name = "weite"
+    pdf_file_name = "deguo_tongshi"
     pdf_dir_path = os.path.join(PROJECT_DIR, f"output/{pdf_file_name}")
     ocr_result_file_path = os.path.join(pdf_dir_path, "ocr_result.json")
     original_text_file_path = os.path.join(pdf_dir_path, "original_text.json")
