@@ -11,7 +11,7 @@ Sometimes, I want to edit some old documents that I used wrote and keep a new ve
 
 1. **PDF Preprocessing**  
    The first step is the PDF preprocessing step, which involves taking a text-based PDF file and extracting the text from each page. I used PyMuPDF (imported as fitz in Python) to obtain the textual content. The results are stored in a JSON file, mapping page indices to text content.  
-   For example, check out the cover page and contents page of ***deguo_tongshi***:![Alt Text](/assets/deguo_tongshi_cover.png) ![Alt Text](/assets/deguo_tongshi_contents.png)
+   For example, check out the cover page and contents page of ***The History of Germany***:![Alt Text](/assets/deguo_tongshi_cover.png) ![Alt Text](/assets/deguo_tongshi_contents.png)
    The resulted text is:
    ```json
    {
@@ -25,7 +25,7 @@ Sometimes, I want to edit some old documents that I used wrote and keep a new ve
 2. **OCR**  
    However, to simulate the kind of errors that might arise from real-world scanning or image-based PDFs, we also convert each page of the PDF into an image (for instance, PNG format). Again I will use the same PyMuPDF library, which can render each page at a chosen resolution and produce an image. Once the images are generated for each page, we apply an OCR tool, in this case PaddleOCR, to extract text from the images. It is expected that this process will produce certain recognition errors when dealing with various fonts, complex layouts, or slight image distortions. These OCR outputs constitute our “incorrect” text, a version that should in principle match the original PDF text, but will naturally deviate due to misrecognitions.   
    
-   Here is an example generated from ***deguo_tongshi***, **page 83**:
+   Here is an example generated from ***The History of Germany***, **page 83**:
    ```json
    {
       "83": "四、诸侯宗教改革和反宗教改革路德的宗教改革，正处在德意志社会内部萌生新的早期资本主义经济关系之时，因此路德教教义除了代表一种民族国家的要求外，还贯穿一种德意志特有的新教资本主义精神。由于民族运动和社会力量不足以克服封建主义，路德教教义的社会内涵也就发生变化，新教资本主义精神也遭到扭曲和阻遇。这就是为什么路德本人竭力反对农民战争的暴力行为以及城市市民阶级不支持农民起义的深层原因。路德的宗教改革被德意志诸侯所利用，成为他们劫掠和坐收渔人之利的工具。在许多诸侯邦内，仿效萨克森选侯的榜样，组织起本邦新教教会，诸侯则成为本邦教会的首脑，集本邦的国家权力和教会权力于一身，巩固了自已的权力和独立性。教士们在新教邦内成为诸侯的官员和诸侯统治的重要支柱。不仅如此，新教邦诸侯还在教产还俗的浪潮中发了大财，加强了财政实力。这种诸侯宗教改革的传播，不仅扩大了正统天主教派同宗教改革运动之间的裂痕，也遭到德皇查理五世的反对。查理五世看出，德意志各邦诸侯权力的加强，是对皇帝中央集权计划的巨大威胁。不过当时的政治形势让皇帝抽不出手来，他为了获得意大利的支配权而卷入同法国国王弗朗索瓦一世长达20年的系列战争中。在天主教集团首领皇帝不在的情况下，1522年帝国议会在纽伦堡开会。在萨克森选侯弗里德里希影响下的新教福音派（Evangelium，即路德派）集团不仅公然蔑视教皇及其使臣，而且道使帝国议会宣布上年的沃尔姆斯救令不予施行。1525年普鲁士宗教骑士团国家宣布世俗化，把路德教作为领地宗教。1526年黑森伯爵排力浦与萨克森选侯约翰，加上吕纳堡、普鲁士、马格德堡诸诸侯，形成同情路德教的第一个诸侯组织托尔高联盟，在同年的斯派耶尔帝国议会上否定了奥地利大公提出的施行沃尔姆斯救令以及禁止宗教改革的意见，通过一些有利于路德派教义的法令：把有关信仰的决定交由各邦自行处理。在天主教阵营中，巴伐利亚公爵和几位来自南德的主教，则与查理五世的弟弟，奥地利亲王斐迪南联合起来。在1529年召开的斯派耶尔帝国议会上形势陡变。皇帝在同法朗索瓦一世的战争中打了几次胜仗，加强了斐迪南和天主教集团在帝国议会的地位。查理五世的代表宣布，废止1526年斯派耶尔帝国议会的决议，重申沃尔姆斯救令。会议通过决议：严格执行沃尔姆斯敕令，不得实行宗教改革，不宽容新教各派和再洗礼派，不得剥夺大主教会的"
@@ -34,8 +34,8 @@ Sometimes, I want to edit some old documents that I used wrote and keep a new ve
 
 3. **Corpus Construction**  
    We now have, for every page in the PDF, two versions of the text: one obtained via direct PDF text extraction (the presumed “correct” reference), and another obtained from the OCR-processed images (the “incorrect” text that usually contains a range of substitution, insertion, or deletion errors). The central step is to align and compare these two versions in order to identify pairs of sentences that differ minimally overall but show localized discrepancies—precisely the type of data that can form a text correction corpus.   
-   The approach is to segment both the correct text and the OCR text into sentences. We can use a Chinese sentence segmentation tool, “sentencex”, to divide the raw text into manageable chunks. Then, for each OCR sentence, we look for the most similar “correct” sentence among the set of extracted reference sentences on the same page. My approach to determine whether two sentences are the "same" uses a Jaccard similarity based on the sets of characters in each sentence. If two sentences hit a Jaccard similarity above a certain threshold (I used **0.8** for ***deguo_tongshi***, but this hyperparameter can be fine-tuned per texts, consider **magazines** vs. **history books**), we assume that these two sentences are intended to be identical, aside from potential OCR mistakes.   
-   For example, one discrepancy in ***deguo_tongshi*** on **page 83**:
+   The approach is to segment both the correct text and the OCR text into sentences. We can use a Chinese sentence segmentation tool, “sentencex”, to divide the raw text into manageable chunks. Then, for each OCR sentence, we look for the most similar “correct” sentence among the set of extracted reference sentences on the same page. My approach to determine whether two sentences are the "same" uses a Jaccard similarity based on the sets of characters in each sentence. If two sentences hit a Jaccard similarity above a certain threshold (I used **0.8** for ***The History of Germany***, but this hyperparameter can be fine-tuned per texts, consider **magazines** vs. **history books**), we assume that these two sentences are intended to be identical, aside from potential OCR mistakes.   
+   For example, one discrepancy in ***The History of Germany*** on **page 83**:
    ```json
    {
       "ori_sent": "查理五世的代表宣布，废止1526年斯派耶尔帝国议会的决议，重申沃尔姆斯敕令。",
